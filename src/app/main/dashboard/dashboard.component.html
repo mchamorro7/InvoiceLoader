@@ -1,3 +1,42 @@
-<p>
-    Dashboard Works!
-</p>
+<div class="container">
+    <div class="row my-3">
+        <button class="btn btn-primary" (click)="goToPreviousPage()">Load Invoices</button>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr class="bg-secondary text-white">
+                        <th scope="col">Invoice Number</th>
+                        <th scope="col">% Tax</th>
+                        <th scope="col">Net</th>
+                        <th scope="col">Tax</th>
+                        <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of invoicesLoaded">
+                        <td>{{item.number}}</td>
+                        <td>{{invoiceService.percentFormat(item.taxPercent)}}</td>
+                        <td>{{invoiceService.currencyFormat(item.net)}}</td>
+                        <td>{{item.getTax()}}</td>
+                        <td>{{invoiceService.currencyFormat(item.getTotal())}}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td class="bg-info text-white font-weight-bold">{{invoiceService.currencyFormat(allTotal.netTotal)}}</td>
+                        <td class="bg-info text-white font-weight-bold">{{allTotal.taxTotal.toFixed(2)}}</td>
+                        <td class="bg-info text-white font-weight-bold">{{invoiceService.currencyFormat(allTotal.result)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row justify-content-end">
+            <button class="btn btn-danger" 
+            (click)="deleteAllWork()" [disabled]="invoicesLoaded.length === 0">
+            Delete Work
+    </button>
+    </div>
+</div>

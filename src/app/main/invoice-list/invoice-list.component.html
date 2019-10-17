@@ -1,3 +1,75 @@
-<p>
-    Invoice List Works!
-</p>
+<div class="container">
+    <div class="row justify-content-end">
+        <button class="btn btn-light" [routerLink]="['/dashboard']"> View Invoices Loaded</button>
+    </div>
+    <form class="row" (ngSubmit)="addToInvoiceArray()" [formGroup]="invoiceForm">
+            <div class="col-md-6 row">
+                <div class="form-group col-md-4">
+                    <label for="invoiceNumber">Invoice Number</label>
+                    <div>
+                        <input type="number" class="form-control" formControlName="number" id="invoiceNumber" aria-describedby="invoiceNumber">
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="net">Net</label>
+                    <input type="number" class="form-control" formControlName="net" id="net" aria-describedby="net">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="taxPercent">% Tax</label>
+                    <select class="form-control" formControlName="taxPercent" id="taxPercent">
+                        <option *ngFor="let tax of invoiceService.taxOptions" [value]="tax.value">{{tax.tag}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 row">
+                <div class="form-group col-md-6">
+                    <label for="total">Total</label>
+                    <input formControlName="total" type="text" class="form-control" id="total" aria-describedby="total">
+                </div>
+                <div class="form-group col-md-6">
+                    <div class="d-flex justify-content-end align-items-end h-100">
+                            <button class="btn btn-outline-success w-50 mx-2" [disabled]="!invoiceForm.valid" type="submit">Add</button>
+                            <button class="btn btn-outline-danger w-50 mx-2" type="button" (click)="clearForm()">Clear</button>
+                    </div>
+                </div>
+            </div>
+    </form>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr class="bg-secondary text-white">
+                        <th scope="col">Invoice Number</th>
+                        <th scope="col">Net</th>
+                        <th scope="col">% Tax</th>
+                        <th scope="col">Tax</th>
+                        <th scope="col">Total</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of invoiceArray">
+                        <td>{{item.number}}</td>
+                        <td>{{invoiceService.currencyFormat(item.net)}}</td>
+                        <td>{{invoiceService.percentFormat(item.taxPercent)}}</td>
+                        <td>{{item.getTax()}}</td>
+                        <td>{{invoiceService.currencyFormat(item.getTotal())}}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" (click)="removeFromInvoiceArray(item)">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+        <!-- Quickly check saved invoices -->
+        <!-- <p>{{ invoiceArray | json }}</p> -->
+    
+     <div class="row justify-content-end">
+        <button class="btn btn-primary" [routerLink]="['/dashboard']" 
+            (click)="storeInvoices()" [disabled]="invoiceArray.length === 0">
+            Process and Continue
+        </button>
+     </div>
+</div>
